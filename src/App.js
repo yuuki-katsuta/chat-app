@@ -22,7 +22,13 @@ class App extends React.Component {
     }
   }
 
+  //DBの情報を常時監視する」ような処理
+  //コンポーネントの初回レンダー時において、リスナーが定義されるようにします
+
+  //Firestoreからのデータ取得と、React内のthis.stateの更新
+  //FirestoreではonSnapshotメソッドを使うことで、DB上のデータがアップデートされたとき、自動的に接続中のクライアントのデータにも反映することができます。
   componentDidMount() {
+    //DBにデータが追加されたら、実行される
     messages.onSnapshot
       ((querySnapshot) => {
         // クエリが非同期処理のため、この中にsetStateなどを書かないと空になってしまう
@@ -39,6 +45,8 @@ class App extends React.Component {
         this.setState({
           messages: msgs
         });
+        console.log('マウント2！')
+        console.log(this.state.messages)
       });
   }
 
@@ -67,6 +75,9 @@ class App extends React.Component {
       alert('text empty')
       return
     }
+
+    //FirestoreのaddメソッドによってDBにデータを追加します。
+    //addメソッドを使うことで投稿処理を実装します
     messages.add({
       "user_name": this.state.user_name,
       "profile_image": this.state.profile_image,
